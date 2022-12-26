@@ -15,7 +15,7 @@ public class FileUtility {
         }
     }
 
-    public void printResults() {
+    public void printResults() throws NumberFormatException {
         results = new double[wordsInLine.length];
         for (int i = 0; i < wordsInLine.length; i++) {
             String[] split = wordsInLine[i].split(" ");
@@ -24,7 +24,8 @@ public class FileUtility {
             double number2 = Double.parseDouble(split[2]);
             double result = calculateResult(number1, option, number2);
             results[i] = result;
-            System.out.println(number1 + " " + option + " " + number2 + " = " + result);
+            String line = number1 + " " + option + " " + number2;
+            System.out.println(line + " = " + result);
         }
     }
 
@@ -32,7 +33,7 @@ public class FileUtility {
         try (
                 var fileWriter = new FileWriter(fileName);
                 var bufferedWriter = new BufferedWriter(fileWriter);
-                ){
+                ) {
             for (int i = 0; i < results.length; i++) {
                 bufferedWriter.write(wordsInLine[i] + " = " + results[i]);
                 bufferedWriter.newLine();
@@ -55,6 +56,8 @@ public class FileUtility {
             case "/":
                 result = number1 / number2;
                 break;
+            default:
+                throw new WrongOptionException();
         }
         return result;
     }

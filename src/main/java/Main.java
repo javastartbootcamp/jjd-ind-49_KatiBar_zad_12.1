@@ -13,6 +13,11 @@ class Main {
             System.err.println("Brak pliku o nazwie: " + fileName);;
         } catch (IOException e) {
             System.err.println("Nie udało się dopisać nowych danych do pliku: " + fileName);
+        } catch (WrongOptionException e) {
+            System.err.println("Z pliku: " + fileName + " wczytano błędną opcję do kalkulatora wyników");
+        } catch (NumberFormatException e) {
+            System.err.println("W pliku: " + fileName + " podano zły format danych do kalkulatora, liczby powinny " +
+                    "być typu double lub int");
         }
     }
 }
