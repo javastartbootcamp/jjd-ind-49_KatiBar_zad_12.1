@@ -6,9 +6,9 @@ class Main {
         String fileName = "operations.txt";
         FileUtility fileUtility = new FileUtility();
         try {
-            fileUtility.readFile(fileName);
-            fileUtility.printResults();
-            fileUtility.saveResults(fileName);
+            String[] lines = fileUtility.readFile(fileName);
+            double[] results = fileUtility.calculateResults(lines);
+            fileUtility.saveResults(lines, fileName, results);
         } catch (FileNotFoundException e) {
             System.err.println("Brak pliku o nazwie: " + fileName);;
         } catch (IOException e) {

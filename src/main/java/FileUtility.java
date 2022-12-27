@@ -2,46 +2,50 @@ import java.io.*;
 import java.util.Scanner;
 
 public class FileUtility {
-    private double[] results;
-    private String[] wordsInLine;
-
-    public void readFile(String fileName) throws FileNotFoundException {
+    public String[] readFile(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
-        Scanner scanner = new Scanner(file);
-        int lines = countLines(fileName);
-        wordsInLine = new String[lines];
-        for (int i = 0; i < lines; i++) {
-            wordsInLine[i] = scanner.nextLine();
+        try ( Scanner scanner = new Scanner(file)) {
+            int lines = countLines(fileName);
+            String[] wordsInLine = new String[lines];
+            for (int i = 0; i < lines; i++) {
+                wordsInLine[i] = scanner.nextLine();
+            }
+            return wordsInLine;
         }
     }
 
-    public void printResults() throws NumberFormatException {
-        results = new double[wordsInLine.length];
-        for (int i = 0; i < wordsInLine.length; i++) {
-            String[] split = wordsInLine[i].split(" ");
+    public double[] calculateResults(String[] lines) throws NumberFormatException {
+        double[] results = new double[lines.length];
+        for (int i = 0; i < lines.length; i++) {
+            String[] split = lines[i].split(" ");
             double number1 = Double.parseDouble(split[0]);
             String option = split[1];
             double number2 = Double.parseDouble(split[2]);
-            double result = calculateResult(number1, option, number2);
+            double result = calculateResultFromOption(number1, option, number2);
             results[i] = result;
-            String line = number1 + " " + option + " " + number2;
-            System.out.println(line + " = " + result);
+            printResult(number1, option, number2, result);
         }
+        return results;
     }
 
-    public void saveResults(String fileName) throws IOException {
+    private static void printResult(double number1, String option, double number2, double result) {
+        String line = number1 + " " + option + " " + number2;
+        System.out.println(line + " = " + result);
+    }
+
+    public void saveResults(String[] lines, String fileName, double[] results) throws IOException {
         try (
                 var fileWriter = new FileWriter(fileName);
                 var bufferedWriter = new BufferedWriter(fileWriter);
                 ) {
             for (int i = 0; i < results.length; i++) {
-                bufferedWriter.write(wordsInLine[i] + " = " + results[i]);
+                bufferedWriter.write(lines[i] + " = " + results[i]);
                 bufferedWriter.newLine();
             }
         }
     }
 
-    private static double calculateResult(double number1, String option, double number2) {
+    private static double calculateResultFromOption(double number1, String option, double number2) {
         double result = 0;
         switch (option) {
             case "+":
@@ -64,13 +68,14 @@ public class FileUtility {
 
     private static int countLines(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
-        Scanner scanner = new Scanner(file);
-        int lines = 0;
-        while (scanner.hasNextLine()) {
-            lines++;
-            scanner.nextLine();
+        try (Scanner scanner = new Scanner(file)) {
+            int lines = 0;
+            while (scanner.hasNextLine()) {
+                lines++;
+                scanner.nextLine();
+            }
+            return lines;
         }
-        return lines;
     }
 }
 
