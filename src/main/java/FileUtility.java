@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class FileUtility {
     public String[] readFile(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
-        try ( Scanner scanner = new Scanner(file)) {
+        try (Scanner scanner = new Scanner(file)) {
             int lines = countLines(fileName);
             String[] wordsInLine = new String[lines];
             for (int i = 0; i < lines; i++) {
